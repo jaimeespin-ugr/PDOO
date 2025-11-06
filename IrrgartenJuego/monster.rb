@@ -1,5 +1,5 @@
 class Monster
-  INITIAL_HEALTH=5
+  INITIAL_HEALTH = 5
 
   def initialize(name, intelligence, strenght)
     @name = name.to_s
@@ -12,34 +12,34 @@ class Monster
   end
 
   def dead
-    @health<=0
+    @health <= 0
   end
 
   def attack
-    dado=Dice.new
+    dado = Dice.new
     dado.intensity(@strenght)
   end
 
-  def setPos(row, col)
-    @row=row.to_i
-    @col=col.to_i
+  def set_pos(row, col)
+    @row = row.to_i
+    @col = col.to_i
   end
 
-  def to_s()
-    "Name: "+@name+"\n"+
-    "Intelligence: "+@intelligence+"\n"+
-    "Strength: "+@strength+"\n"+
-    "Health: "+@health+"\n"+
-    "["+@row+","+@col+"]";
+  def to_s
+    "Name: #{@name}\n" +
+      "Intelligence: #{@intelligence}\n" +
+      "Strength: #{@strength}\n" +
+      "Health: #{@health}\n" +
+      "[#{@row},#{@col}]"
   end
 
   def defend(recievedAttack)
-    #Siguiente práctica
+    # Siguiente práctica
   end
+
   private
 
-  def gotWounded()
-    @health-=1.0
+  def got_wounded
+    @health -= 1.0
   end
-
 end

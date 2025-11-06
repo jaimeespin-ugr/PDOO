@@ -11,55 +11,55 @@ class Dice
 
   @@generator = Random.new
 
-  def self.random_pos(max)
+  def random_pos(max)
     @@generator.rand(0...max)
   end
 
-  def self.who_starts(nplayers)
+  def who_starts(nplayers)
     @@generator.rand(0...nplayers)
   end
 
-  def self.random_intelligence
+  def random_intelligence
     @@generator.rand(0...MAX_INTELLIGENCE)
   end
 
-  def self.random_strength
+  def random_strength
     @@generator.rand(0...MAX_STRENGTH)
   end
 
-  def self.resurrect_player
+  def resurrect_player
     @@generator.rand < RESURRECT_PROB
   end
 
-  def self.weapons_reward
+  def weapons_reward
     @@generator.rand(0..WEAPONS_REWARD)
   end
 
-  def self.shields_reward
+  def shields_reward
     @@generator.rand(0..SHIELDS_REWARD)
   end
 
-  def self.health_reward
+  def health_reward
     @@generator.rand(0..HEALTH_REWARD)
   end
 
-  def self.weapon_power
+  def weapon_power
     @@generator.rand(0...MAX_ATTACK)
   end
 
-  def self.shield_power
+  def shield_power
     @@generator.rand(0...MAX_SHIELD)
   end
 
-  def self.uses_left
+  def uses_left
     @@generator.rand(0..MAX_USES)
   end
 
-  def self.intensity(competence)
+  def intensity(competence)
     @@generator.rand(0...competence)
   end
 
-  def self.discard_element(usesLeft)
+  def discard_element(usesLeft)
     probability = 1.0 - (usesLeft.to_f / MAX_USES)
     @@generator.rand < probability
   end
