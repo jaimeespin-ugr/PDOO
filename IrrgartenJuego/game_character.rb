@@ -1,4 +1,6 @@
-module GameCharacter
-  PLAYER = :player
-  MONSTER = :monster
+module Irrgarten
+  module GameCharacter
+    PLAYER = :player
+    MONSTER = :monster
+  end
 end

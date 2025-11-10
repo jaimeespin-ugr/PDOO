@@ -1,24 +1,25 @@
-class Weapon
-  def initialize(power, uses)
-    @power = power.to_f
-    @uses = uses.to_i
-  end
+module Irrgarten
+  class Weapon
+    def initialize(power, uses)
+      @power = power.to_f
+      @uses = uses.to_i
+    end
 
-  def attack
-    if @uses > 0
-      @uses -= 1
-      @power
-    else
-      0.0
+    def attack
+      if @uses > 0
+        @uses -= 1
+        @power
+      else
+        0.0
+      end
+    end
+
+    def to_s
+      "W[#{@power}, #{@uses}]"
+    end
+
+    def discard
+      Dice.discard_element(@uses)
     end
   end
-
-  def to_s
-    "W[#{@power}, #{@uses}]"
-  end
-
-  def discard
-    Dice.discard_element(@uses);
-  end
-  
 end
