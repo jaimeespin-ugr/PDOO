@@ -30,7 +30,7 @@ module Irrgarten
         "Intelligence: #{@intelligence}\n" +
         "Strength: #{@strength}\n" +
         "Health: #{@health}\n" +
-        "[#{@row},#{@col}]"
+        "Pos: [#{@row},#{@col}]"
     end
 
     def defend(recieved_attack)

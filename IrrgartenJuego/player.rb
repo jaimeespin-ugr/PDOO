@@ -9,11 +9,11 @@ module Irrgarten
     HITS2LOSE = 3
 
     def initialize(number, intelligence, strenght)
-      @number = number.to_c
+      @number = number
       @intelligence = intelligence.to_f
       @strenght = strenght.to_f
 
-      @name = "Player # #{number.to_c}"
+      @name = "Player # #{number}"
 
       @health = INITIAL_HEALTH
       @weapons = []
@@ -88,8 +88,8 @@ module Irrgarten
       "Intelligence: #{@intelligence}\n" \
       "Strength: #{@strenght}\n" \
       "Health: #{@health}\n" \
-      "[#{@row},#{@col}]\n" \
-      "Items: #{@weapons.size} Armas, #{@shields.size} Escudos\n" \
+      "Pos: [#{@row},#{@col}]\n" \
+      "Items: #{@weapons.size} weapons, #{@shields.size} shields\n" \
       "Consecutive Hits: #{@consecutive_hits}"
     end
 

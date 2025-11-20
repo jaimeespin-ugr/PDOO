@@ -4,6 +4,7 @@ require_relative 'monster'
 require_relative 'labyrinth'
 require_relative 'dice'
 require_relative 'orientation'
+require_relative 'game_state'
 module Irrgarten
   class Game
     NUM_PLAYERS = 2
@@ -58,13 +59,18 @@ module Irrgarten
       else
         manage_resurrection
       end
+      # Después de procesar el paso, pasar al siguiente jugador
+      next_player
+
+      # Devolver booleano que indica si el juego ha terminado
+      finished?
     end
 
     def get_game_state
-      GameState.new(
+      Irrgarten::GameState.new(
         @labyrinth.to_s,
-        @players.to_s,
-        @monsters.to_s,
+        @players,
+        @monsters,
         @current_player_index,
         finished?,
         @log

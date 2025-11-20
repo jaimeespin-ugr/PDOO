@@ -1,9 +1,5 @@
-#!/usr/bin/env ruby
-# Cargar los archivos necesarios desde sus módulos/directorios
-# Asume que este script está en el directorio raíz,
-# junto a la carpeta 'irrgarten'.
 require_relative './game'
-require_relative './ui/text_ui'
+require_relative './ui/textUI'
 require_relative './controller/controller'
 
 # --- Ejecución Principal ---
