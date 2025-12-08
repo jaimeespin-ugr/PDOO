@@ -1,36 +1,28 @@
 module Irrgarten
-  class Monster
+  class Monster < LabyrinthCharacter
     INITIAL_HEALTH = 5
 
     def initialize(name, intelligence, strenght)
-      @name = name.to_s
-      @intelligence = intelligence.to_f
-      @strenght = strenght.to_f
+      super(name, intelligence, strenght, INITIAL_HEALTH)
 
-      @health = INITIAL_HEALTH
       @row = -1
       @col = -1
     end
 
     def dead
-      @health <= 0
+      super
     end
 
     def attack
-      Dice.intensity(@strenght)
+      Dice.intensity(@strength)
     end
 
     def set_pos(row, col)
-      @row = row.to_i
-      @col = col.to_i
+      super(row, col)
     end
 
     def to_s
-      "Name: #{@name}\n" +
-        "Intelligence: #{@intelligence}\n" +
-        "Strength: #{@strength}\n" +
-        "Health: #{@health}\n" +
-        "Pos: [#{@row},#{@col}]"
+      super.to_s
     end
 
     def defend(recieved_attack)

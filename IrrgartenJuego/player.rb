@@ -1,24 +1,28 @@
 require_relative 'weapon'
 require_relative 'shield'
+require_relative 'labyrinthCharacter'
 
 module Irrgarten
-  class Player
+  class Player < LabyrinthCharacter
     MAX_WEAPONS = 2
     MAX_SHIELD = 3
     INITIAL_HEALTH = 10
     HITS2LOSE = 3
 
     def initialize(number, intelligence, strenght)
+      super(number, intelligence, strenght, INITIAL_HEALTH)
       @number = number
-      @intelligence = intelligence.to_f
-      @strenght = strenght.to_f
-
-      @name = "Player # #{number}"
-
-      @health = INITIAL_HEALTH
       @weapons = []
       @shields = []
       @consecutive_hits = 0
+    end
+
+    def copia(lc)
+      copia_labchar(lc)
+      @weapons = lc.weapons
+      @shields = lc.shields
+      @consecutivehits = lc.consecutivehits
+      @number = lc.number
     end
 
     def resurrect
@@ -28,25 +32,12 @@ module Irrgarten
       @consecutive_hits = 0
     end
 
-    def get_row
-      @row
-    end
-
-    def get_col
-      @col
-    end
-
-    def get_number
-      @number
-    end
-
     def set_pos(row, col)
-      @row = row.to_i
-      @col = col.to_i
+      super(row, col)
     end
 
     def dead
-      @health <= 0
+      super
     end
 
     def move(direction, valid_moves)
@@ -61,7 +52,7 @@ module Irrgarten
     end
 
     def attack
-      @strenght + sum_weapons
+      @strength + sum_weapons
     end
 
     def defend(recieved_attack)
@@ -73,36 +64,52 @@ module Irrgarten
       s_reward = Dice.shields_reward
 
       (1..w_reward).each do
-        recieve_weapon(new_weapon)
+        receive_weapon(new_weapon)
       end
 
       (1..s_reward).each do
-        recieve_shield(new_shield)
+        receive_shield(new_shield)
       end
       extra_health = Dice.health_reward
       @health += extra_health
     end
 
     def to_s
-      "Name: #{@name}\n" \
-      "Intelligence: #{@intelligence}\n" \
-      "Strength: #{@strenght}\n" \
-      "Health: #{@health}\n" \
-      "Pos: [#{@row},#{@col}]\n" \
-      "Items: #{@weapons.size} weapons, #{@shields.size} shields\n" \
-      "Consecutive Hits: #{@consecutive_hits}"
+      super.to_s
     end
+
+    attr_reader :number,:col,:row,:intelligence,:strength,:shields,:weapons,:consecutive_hits
 
     private
 
-    def recieve_weapon(w)
-      @weapons.delete_if(&:discard)
-      @weapons << w if @weapons.size < MAX_WEAPONS
+    def receive_weapon(w)
+      @weapons.each do|ih|
+        if ih.is_a?(Weapon)
+          discard=ih.discard
+          if discard
+            @weapons.delete(ih)
+          end
+        end
+      end
+      size=@weapons.size
+      if size<MAX_WEAPONS && w.is_a?(Weapon)
+        @weapons[size]=w
+      end
     end
 
-    def recieve_shield(s)
-      @shields.delete_if(&:discard)
-      @shields << s if @shields.size < MAX_SHIELD
+    def receive_shield(s)
+      @shields.each do |wi|
+        if wi.is_a?(Shield)
+          d=wi.discard
+          if d
+            @shields.delete(wi)
+          end
+        end
+      end
+      size=@shields.size
+      if size<MAX_SHIELD && s.is_a?(Shield)
+        @shields[size]=s
+      end
     end
 
     def new_weapon

@@ -61,8 +61,8 @@ module Irrgarten
     end
 
     def put_player(direction, player)
-      old_row = player.get_row
-      old_col = player.get_col
+      old_row = player.row
+      old_col = player.col
 
       new_pos = dir2_pos(old_row, old_col, direction)
       put_player_2d(old_row, old_col, new_pos[ROW], new_pos[COL], player)
@@ -184,7 +184,7 @@ module Irrgarten
           @labyrinth[row][col] = COMBAT_CHAR
           output = @monsters[row][col]
         else
-          number = player.get_number
+          number = player.number
           @labyrinth[row][col] = number
         end
         @players[row][col] = player

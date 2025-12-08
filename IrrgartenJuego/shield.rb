@@ -1,25 +1,18 @@
+require_relative 'combatElement'
 module Irrgarten
-  class Shield
+  class Shield < CombatElement
     def initialize(protection, uses)
-      @protection = protection.to_f
-      @uses = uses.to_i
+      super(protection, uses)
     end
 
     def protect
-      if @uses > 0
-        @uses -= 1
-        @protection
-      else
-        0.0
-      end
+      produceeffect
     end
 
     def to_s
-      "W[#{@protection}, #{@uses}]"
+      'W[' + super.to_s + ']'
     end
 
-    def discard
-      Dice.discard_element(@uses)
-    end
+    public_class_method :new
   end
 end
