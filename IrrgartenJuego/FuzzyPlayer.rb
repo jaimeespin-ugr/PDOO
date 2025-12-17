@@ -1,27 +1,17 @@
 module Irrgarten
   class FuzzyPlayer < Player
-    def copia_player(other)
-      super(other)
-    end
-
-    def move(direction,validmoves)
-      super.move(direction,validmoves)
+    def move(direction, valid_moves)
+      # FuzzyPlayer usa Dice para decidir su movimiento de forma difusa
+      Dice.nextstep(direction, valid_moves, @intelligence)
     end
 
     def attack
-      super
+      # Suma un componente de azar al ataque base
+      super + Dice.intensity(@strength)
     end
-
-    protected
-    def defensiveenergy
-      super
-    end
-
-    public
 
     def to_s
-      "Fuzzy "+super.to_s
+      "Fuzzy " + super.to_s
     end
-
   end
 end

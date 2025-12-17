@@ -9,8 +9,8 @@ module Irrgarten
     INITIAL_HEALTH = 10
     HITS2LOSE = 3
 
-    def initialize(number, intelligence, strenght)
-      super(number, intelligence, strenght, INITIAL_HEALTH)
+    def initialize(number, intelligence, strength)
+      super(number, intelligence, strength, INITIAL_HEALTH)
       @number = number
       @weapons = []
       @shields = []
@@ -21,7 +21,7 @@ module Irrgarten
       copia_labchar(lc)
       @weapons = lc.weapons
       @shields = lc.shields
-      @consecutivehits = lc.consecutivehits
+      @consecutive_hits = lc.consecutive_hits
       @number = lc.number
     end
 
@@ -30,14 +30,6 @@ module Irrgarten
       @weapons = []
       @shields = []
       @consecutive_hits = 0
-    end
-
-    def set_pos(row, col)
-      super(row, col)
-    end
-
-    def dead
-      super
     end
 
     def move(direction, valid_moves)
@@ -55,8 +47,8 @@ module Irrgarten
       @strength + sum_weapons
     end
 
-    def defend(recieved_attack)
-      manage_hit(recieved_attack)
+    def defend(received_attack)
+      manage_hit(received_attack)
     end
 
     def receive_reward
@@ -72,44 +64,32 @@ module Irrgarten
       end
       extra_health = Dice.health_reward
       @health += extra_health
+      
+      [w_reward, s_reward, extra_health]
     end
 
     def to_s
-      super.to_s
+      weapons_str = @weapons.empty? ? "" : @weapons.map(&:to_s).join(", ")
+      shields_str = @shields.empty? ? "" : @shields.map(&:to_s).join(", ")
+      "Player##{@number} - " + super.to_s + " [Armas: #{weapons_str}] [Escudos: #{shields_str}]"
     end
 
-    attr_reader :number,:col,:row,:intelligence,:strength,:shields,:weapons,:consecutive_hits
+    attr_reader :number, :col, :row, :intelligence, :strength, :shields, :weapons, :consecutive_hits
 
     private
 
     def receive_weapon(w)
-      @weapons.each do|ih|
-        if ih.is_a?(Weapon)
-          discard=ih.discard
-          if discard
-            @weapons.delete(ih)
-          end
-        end
-      end
-      size=@weapons.size
-      if size<MAX_WEAPONS && w.is_a?(Weapon)
-        @weapons[size]=w
-      end
+      return unless w.is_a?(Weapon)
+      
+      @weapons.reject! { |weapon| weapon.discard }
+      @weapons << w if @weapons.size < MAX_WEAPONS
     end
 
     def receive_shield(s)
-      @shields.each do |wi|
-        if wi.is_a?(Shield)
-          d=wi.discard
-          if d
-            @shields.delete(wi)
-          end
-        end
-      end
-      size=@shields.size
-      if size<MAX_SHIELD && s.is_a?(Shield)
-        @shields[size]=s
-      end
+      return unless s.is_a?(Shield)
+      
+      @shields.reject! { |shield| shield.discard }
+      @shields << s if @shields.size < MAX_SHIELD
     end
 
     def new_weapon
@@ -121,41 +101,28 @@ module Irrgarten
     end
 
     def sum_weapons
-      sum = 0
-      @weapons.each do |element|
-        sum += element.attack
-      end
-      sum
+      @weapons.sum { |weapon| weapon.attack }
     end
 
     def sum_shields
-      sum = 0
-      @shields.each do |element|
-        sum += element.protect
-      end
-      sum
+      @shields.sum { |shield| shield.protect }
     end
 
     def defensive_energy
       @intelligence + sum_shields
     end
 
-    def manage_hit(recieved_attack)
+    def manage_hit(received_attack)
       defense = defensive_energy
-      if defense < recieved_attack
+      if defense < received_attack
         got_wounded
         inc_consecutive_hits
       else
         reset_hits
       end
 
-      if @consecutive_hits == HITS2LOSE || dead
-        reset_hits
-        lose = true
-      else
-        lose = false
-      end
-
+      lose = @consecutive_hits == HITS2LOSE || dead
+      reset_hits if lose
       lose
     end
 

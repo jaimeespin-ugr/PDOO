@@ -6,15 +6,16 @@ require_relative 'shield'
 require_relative 'dice'
 require_relative 'game_state'
 
-class TestP1
-  def self.main
-    puts "============== PRUEBA DE LA PRÁCTICA 1 EN RUBY ==============\n"
+module Irrgarten
+  class TestP1
+    def self.main
+      puts "============== PRUEBA DE LA PRÁCTICA 1 EN RUBY ==============\n"
 
-    # 1. Probar los "Enumerados" (Módulos)
-    puts '## 1. Probando Módulos (Enumerados) ##'
-    puts "Dirección: #{Directions::UP}"
-    puts "Orientación: #{Orientation::HORIZONTAL}"
-    puts "Personaje: #{GameCharacter::PLAYER}"
+      # 1. Probar los "Enumerados" (Módulos)
+      puts '## 1. Probando Módulos (Enumerados) ##'
+      puts "Dirección: #{Directions::UP}"
+      puts "Orientación: #{Orientation::HORIZONTAL}"
+      puts "Personaje: #{GameCharacter::PLAYER}"
     puts "--------------------------------\n"
 
     # 2. Crear instancias y probar métodos de Weapon y Shield
@@ -86,7 +87,8 @@ class TestP1
 
     puts '============== FIN DE LA PRUEBA =============='
   end
+  end
 end
 
 # Línea para ejecutar el programa principal
-TestP1.main
+Irrgarten::TestP1.main

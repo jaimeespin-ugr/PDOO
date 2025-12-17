@@ -10,29 +10,5 @@ module Irrgarten
       @winner = winner
       @log = log.to_s
     end
-
-    def getLabyrinth
-      @labyrinth
-    end
-
-    def getPlayers
-      @players
-    end
-
-    def getMonster
-      @monsters
-    end
-
-    def getCurrentPlayer
-      @current_player
-    end
-
-    def isWinner
-      @winner
-    end
-
-    def getLog
-      @log
-    end
   end
 end

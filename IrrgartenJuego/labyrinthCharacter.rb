@@ -1,5 +1,7 @@
 module Irrgarten
   class LabyrinthCharacter
+    attr_reader :name, :intelligence, :strength, :health, :row, :col
+
     def initialize(name, intelligence, strength, health)
       @name = name
       @intelligence = intelligence
@@ -19,9 +21,16 @@ module Irrgarten
     end
 
     def dead
-      muerto = false
-      muerto = true if @health == 0
-      muerto
+      @health == 0
+    end
+
+    def set_pos(row, col)
+      @row = row
+      @col = col
+    end
+
+    def to_s
+      "Nombre: #{@name}, inteligencia: #{@intelligence}, fuerza: #{@strength}, salud: #{@health}, fila: #{@row}, columna: #{@col}"
     end
 
     protected
@@ -42,18 +51,8 @@ module Irrgarten
       @health = health
     end
 
-    def set_pos(row, col)
-      @row = row
-      @col = col
-    end
-
-    def to_s
-      'Nombre: ' + @name.to_s + ',inteligencia: ' + @intelligence.to_s + ', fuerza: ' + @strength.to_s + ', salud: ' + @health.to_s + ', fila: ' + @row.to_s + ', columna: ' + @col.to_s
-    end
-
     def got_wounded
       @health -= 1
     end
   end
-  attr_reader :name, :intelligence, :strength, :health, :row, :col
 end

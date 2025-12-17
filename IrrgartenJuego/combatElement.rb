@@ -7,7 +7,7 @@ module Irrgarten
 
     protected
 
-    def produceeffect
+    def produce_effect
       if @uses > 0
         @uses -= 1
         @effect
@@ -23,9 +23,9 @@ module Irrgarten
     end
 
     def to_s
-      efecto = @effect.nil? ? ' ' : @effect.to_s
-      usos = @uses.nil? ? ' ' : @uses.to_s
-      efecto + ' ' + usos
+      efecto = @effect || ' '
+      usos = @uses || ' '
+      "#{efecto} #{usos}"
     end
 
     private_class_method :new

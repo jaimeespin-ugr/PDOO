@@ -16,7 +16,7 @@ module Irrgarten
     DEFAULT_INTELLIGENCE = 10.0
     DEFAULT_STRENGTH = 10.0
 
-    MAX_ROUNDS = 1
+    MAX_ROUNDS = 10
     def initialize(nplayers)
       @monsters = []
       @log = ''
@@ -39,14 +39,14 @@ module Irrgarten
       @labyrinth.spread_players(@players)
     end
 
-    def finished?
-      @labyrinth.have_a_winner?
+    def finished
+      @labyrinth.have_a_winner
     end
 
     def next_step(preferred_direction)
       @log = ''
       dead = @current_player.dead
-      if !dead
+      unless dead
         direction = actual_direction(preferred_direction)
         log_player_no_orders if direction != preferred_direction
         monster = @labyrinth.put_player(direction, @current_player)
@@ -54,16 +54,16 @@ module Irrgarten
           log_no_monster
         else
           winner = combat(monster)
-          manage_reward(winner)
+          manage_reward(winner, monster)
         end
       else
         manage_resurrection
       end
-      # Después de procesar el paso, pasar al siguiente jugador
-      next_player
+      # Después de procesar el paso, pasar al siguiente jugador solo si el juego no ha terminado
+      next_player unless finished
 
       # Devolver booleano que indica si el juego ha terminado
-      finished?
+      finished
     end
 
     def get_game_state
@@ -71,34 +71,19 @@ module Irrgarten
         @labyrinth.to_s,
         @players,
         @monsters,
-        @current_player_index,
-        finished?,
+        @current_player_index + 1,
+        finished,
         @log
       )
-    end
-
-    private
-
-    def configure_labyrinth
-      @labyrinth.add_block(Orientation::VERTICAL, 2, 2, 5)
-      @labyrinth.add_block(Orientation::HORIZONTAL, 7, 1, 6)
-
-      monster1 = Monster.new('Monster1', Dice.random_intelligence, Dice.random_strength)
-      @monsters << monster1
-      @labyrinth.add_monster(2, 3, monster1)
-    end
-
-    def next_player
-      @current_player_index = (@current_player_index + 1) % @players.size
-      @current_player = @players[@current_player_index]
     end
 
     def log_player_won
       @log += "Jugador gana combate: #{@current_player}\n"
     end
 
-    def log_monster_won
-      @log += "Monstruo gana combate: #{@monsters[@current_player_index]}\n"
+    def log_monster_won(monster = nil)
+      monster_str = monster ? monster.to_s : "Monstruo"
+      @log += "Monstruo gana combate: #{monster_str}\n"
     end
 
     def log_resurrected
@@ -118,14 +103,34 @@ module Irrgarten
     end
 
     def log_rounds(rounds, max)
-      @log += "Se han producido #{rounds} de #{max} rondas de combate"
+      @log += "Se han producido #{rounds} de #{max} rondas de combate\n"
+    end
+
+    def log_reward(weapons, shields, health)
+      @log += "Recompensa recibida: #{weapons} arma(s), #{shields} escudo(s), #{health} puntos de salud\n"
+    end
+
+    private
+
+    def configure_labyrinth
+      @labyrinth.add_block(Orientation::VERTICAL, 2, 2, 5)
+      @labyrinth.add_block(Orientation::HORIZONTAL, 7, 1, 6)
+
+      monster1 = Monster.new('Monster1', Dice.random_intelligence, Dice.random_strength)
+      @monsters << monster1
+      @labyrinth.add_monster(2, 3, monster1)
+    end
+
+    def next_player
+      @current_player_index = (@current_player_index + 1) % @players.size
+      @current_player = @players[@current_player_index]
     end
 
     def actual_direction(preferred_direction)
       current_row = @current_player.row
       current_col = @current_player.col
       valid_moves = @labyrinth.valid_moves(current_row, current_col)
-      output = @current_player.move(preferred_direction, valid_moves)
+      @current_player.move(preferred_direction, valid_moves)
     end
 
     def combat(monster)
@@ -135,26 +140,34 @@ module Irrgarten
       lose = monster.defend(player_attack)
 
       while !lose && rounds < MAX_ROUNDS
-        winner = GameCharacter::MONSTER
         rounds += 1
         monster_attack = monster.attack
         lose = @current_player.defend(monster_attack)
-        next if lose
+        if lose
+          winner = GameCharacter::MONSTER
+          break
+        end
 
         player_attack = @current_player.attack
-        winner = GameCharacter::PLAYER
         lose = monster.defend(player_attack)
       end
+      
+      # Si salimos del bucle porque se alcanzó MAX_ROUNDS sin que nadie muriera, gana el monstruo
+      if !lose && rounds >= MAX_ROUNDS
+        winner = GameCharacter::MONSTER
+      end
+      
       log_rounds(rounds, MAX_ROUNDS)
       winner
     end
 
-    def manage_reward(winner)
+    def manage_reward(winner, monster)
       if winner == GameCharacter::PLAYER
-        @current_player.receive_reward
+        rewards = @current_player.receive_reward
         log_player_won
+        log_reward(rewards[0], rewards[1], rewards[2])
       else
-        log_monster_won
+        log_monster_won(monster)
       end
     end
 

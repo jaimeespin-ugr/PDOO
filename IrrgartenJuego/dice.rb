@@ -21,11 +21,11 @@ module Irrgarten
     end
 
     def self.random_intelligence
-      @@generator.rand(0...MAX_INTELLIGENCE)
+      @@generator.rand(0...MAX_INTELLIGENCE).round(2)
     end
 
     def self.random_strength
-      @@generator.rand(0...MAX_STRENGTH)
+      @@generator.rand(0...MAX_STRENGTH).round(2)
     end
 
     def self.resurrect_player
@@ -66,7 +66,7 @@ module Irrgarten
     end
 
     def self.nextstep(preference, validmoves, intelligence)
-      if @@generator.rand(@@MAX_INTELLIGENCE) < intelligence
+      if @@generator.rand(MAX_INTELLIGENCE) < intelligence
         direccion = preference
       else
         x = @@generator.rand(validmoves.size)

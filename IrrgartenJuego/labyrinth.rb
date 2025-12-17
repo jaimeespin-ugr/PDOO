@@ -26,7 +26,7 @@ module Irrgarten
       @labyrinth[@exit_row][@exit_col] = EXIT_CHAR
     end
 
-    def have_a_winner?
+    def have_a_winner
       !@players[@exit_row][@exit_col].nil?
     end
 

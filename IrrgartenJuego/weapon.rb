@@ -6,11 +6,11 @@ module Irrgarten
     end
 
     def attack
-      produceeffect
+      produce_effect
     end
 
     def to_s
-      'W[' + super.to_s + ']'
+      "W[#{super}]"
     end
 
     public_class_method :new
