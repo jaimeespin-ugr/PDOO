@@ -3,8 +3,6 @@ require_relative './ui/textUI'
 require_relative './controller/controller'
 
 # --- Ejecución Principal ---
-
-begin
   # 1. Crear la vista
   # Asumiendo que TextUI está en Irrgarten::UI
   view = Irrgarten::UI::TextUI.new
@@ -21,11 +19,3 @@ begin
 
   # 4. Iniciar la partida
   controller.play
-rescue Interrupt
-  # Manejar salida con Ctrl+C
-  puts "\nPartida interrumpida. ¡Adiós!"
-rescue StandardError => e
-  # Manejar otros posibles errores
-  puts "Ha ocurrido un error inesperado: #{e.message}"
-  puts e.backtrace
-end
